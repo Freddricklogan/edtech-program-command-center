@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdTech Program Command Center — Delivery, Curriculum &amp; Cohorts</title>
+<meta name="description" content="A project-management command center for educational program delivery: KPI dashboard, curriculum roadmap (Gantt), agile task board, cohort progress analytics, RACI, and a live risk register. Where technical program management meets EdTech.">
+<meta name="author" content="Freddrick Logan">
+<meta name="theme-color" content="#0f1226">
+<meta property="og:type" content="website">
+<meta property="og:title" content="EdTech Program Command Center">
+<meta property="og:description" content="Run educational program delivery like a technical PMO — roadmap, agile board, cohort analytics, RACI, and risk register in one dashboard.">
+<meta property="og:url" content="https://freddricklogan.github.io/edtech-program-command-center/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230f1226'/%3E%3Cg stroke='%237c5cff' stroke-width='2.2' fill='none' stroke-linecap='round'%3E%3Cline x1='8' y1='9' x2='24' y2='9'/%3E%3Cline x1='8' y1='16' x2='19' y2='16'/%3E%3Cline x1='8' y1='23' x2='22' y2='23'/%3E%3C/g%3E%3Ccircle cx='24' cy='23' r='2.4' fill='%2325d6c4'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1226; --bg2:#161a35; --panel:#1a1f3d; --line:rgba(124,92,255,.2);
+    --violet:#7c5cff; --teal:#25d6c4; --amber:#ffb454; --rose:#ff6b8b; --green:#38d39f;
+    --ink:#eaecff; --muted:#9aa3c7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:
+    radial-gradient(1000px 500px at 90% -20%,rgba(124,92,255,.14),transparent),
+    radial-gradient(800px 500px at -10% 10%,rgba(37,214,196,.08),transparent),var(--bg);
+    color:var(--ink);min-height:100vh;line-height:1.5}
+  a{color:var(--teal)}
+  .wrap{max-width:1320px;margin:0 auto;padding:24px 20px 60px}
+  header.site{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:8px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand svg{width:42px;height:42px}
+  .brand h1{font-size:1.5em;letter-spacing:.3px}
+  .brand .sub{color:var(--muted);font-size:.86em}
+  .legend{color:var(--muted);font-size:.82em;text-align:right}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 22px}
+  .tab{padding:10px 16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;
+    cursor:pointer;font-weight:600;font-size:.9em;transition:.2s}
+  .tab:hover{border-color:var(--violet)}
+  .tab.active{background:linear-gradient(135deg,var(--violet),#5b8bff);border-color:transparent;color:#fff;
+    box-shadow:0 6px 20px rgba(124,92,255,.4)}
+  .view{display:none;animation:fade .3s}.view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:22px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .kpi .l{color:var(--muted);font-size:.78em;text-transform:uppercase;letter-spacing:.5px}
+  .kpi .n{font-size:2em;font-weight:800;margin:6px 0 2px}
+  .kpi .d{font-size:.8em;color:var(--muted)}
+  .kpi .trend{font-size:.8em;font-weight:700}
+  .up{color:var(--green)}.down{color:var(--rose)}
+  .bar{height:7px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
+  .bar>span{display:block;height:100%;border-radius:6px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:20px}
+  .panel h2{font-size:1.1em;margin-bottom:4px}
+  .panel .hint{color:var(--muted);font-size:.84em;margin-bottom:16px}
+  .row2{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+  @media(max-width:960px){.row2{grid-template-columns:1fr}}
+  /* Gantt */
+  .gantt{overflow-x:auto}
+  .gantt table{border-collapse:collapse;width:100%;min-width:760px}
+  .gantt th{color:var(--muted);font-size:.74em;font-weight:600;text-align:center;padding:6px 2px;text-transform:uppercase}
+  .gantt td{padding:7px 2px;border-top:1px solid rgba(255,255,255,.05)}
+  .gantt .task{color:var(--ink);font-size:.86em;white-space:nowrap;padding-right:14px;width:210px}
+  .gantt .track{position:relative;height:26px}
+  .gbar{position:absolute;height:20px;top:3px;border-radius:6px;display:flex;align-items:center;
+    padding:0 8px;font-size:.72em;color:#0b0d1c;font-weight:700;overflow:hidden;white-space:nowrap;cursor:default}
+  .gbar .prog{position:absolute;left:0;top:0;bottom:0;background:rgba(0,0,0,.22);border-radius:6px}
+  .milestone{position:absolute;top:1px;width:22px;height:22px;transform:rotate(45deg);border:2px solid #fff;
+    display:flex;align-items:center;justify-content:center}
+  /* Kanban */
+  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:960px){.board{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.board{grid-template-columns:1fr}}
+  .col{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:120px}
+  .col h3{font-size:.82em;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between}
+  .col.drag{outline:2px dashed var(--violet);outline-offset:-4px}
+  .card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:9px;
+    padding:11px;margin-bottom:10px;cursor:grab;transition:.15s}
+  .card:hover{border-color:var(--violet);transform:translateY(-1px)}
+  .card.dragging{opacity:.5}
+  .card .t{font-size:.88em;font-weight:600}
+  .card .m{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  .card .prog-name{font-size:.72em;color:var(--muted)}
+  .pill{font-size:.68em;padding:2px 8px;border-radius:20px;font-weight:700}
+  .p-high{background:rgba(255,107,139,.16);color:var(--rose)}
+  .p-med{background:rgba(255,180,84,.16);color:var(--amber)}
+  .p-low{background:rgba(56,211,159,.16);color:var(--green)}
+  .avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--teal));
+    font-size:.64em;display:flex;align-items:center;justify-content:center;font-weight:800;color:#0b0d1c}
+  /* tables */
+  table.data{width:100%;border-collapse:collapse}
+  table.data th{text-align:left;color:var(--muted);font-size:.74em;text-transform:uppercase;letter-spacing:.4px;padding:8px;border-bottom:1px solid var(--line)}
+  table.data td{padding:9px 8px;border-bottom:1px solid rgba(255,255,255,.05);font-size:.86em}
+  .raci{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:6px;font-weight:800;font-size:.74em}
+  .R{background:rgba(124,92,255,.22);color:#c3b4ff}.A{background:rgba(255,180,84,.2);color:var(--amber)}
+  .C{background:rgba(37,214,196,.18);color:var(--teal)}.I{background:rgba(154,163,199,.16);color:var(--muted)}
+  .sev{font-weight:800;font-size:.78em;padding:3px 9px;border-radius:20px}
+  .sev.hi{background:rgba(255,107,139,.16);color:var(--rose)}.sev.md{background:rgba(255,180,84,.16);color:var(--amber)}
+  .sev.lo{background:rgba(56,211,159,.16);color:var(--green)}
+  .donut{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+  .cohort{margin-bottom:14px}
+  .cohort .top{display:flex;justify-content:space-between;font-size:.86em;margin-bottom:5px}
+  footer.site{text-align:center;margin-top:36px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:.86em}
+  .flash{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--violet);color:#fff;
+    padding:11px 20px;border-radius:10px;font-weight:700;opacity:0;transition:.3s;pointer-events:none}
+  .flash.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <div class="brand">
+      <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#161a35"/><g stroke="#7c5cff" stroke-width="2.2" fill="none" stroke-linecap="round"><line x1="8" y1="9" x2="24" y2="9"/><line x1="8" y1="16" x2="19" y2="16"/><line x1="8" y1="23" x2="22" y2="23"/></g><circle cx="24" cy="23" r="2.4" fill="#25d6c4"/></svg>
+      <div><h1>EdTech Program Command Center</h1>
+        <div class="sub">Technical program management for curriculum delivery &amp; cohort success</div></div>
+    </div>
+    <div class="legend">Portfolio: <b id="prog-count">4</b> active programs<br>Reporting period: Q3 · FY26</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="dash">Dashboard</button>
+    <button class="tab" data-view="road">Curriculum Roadmap</button>
+    <button class="tab" data-view="board">Delivery Board</button>
+    <button class="tab" data-view="cohort">Cohort Analytics</button>
+    <button class="tab" data-view="gov">Governance &amp; Risk</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section class="view active" id="view-dash">
+    <div class="kpis" id="kpi-row"></div>
+    <div class="row2">
+      <div class="panel">
+        <h2>Program Portfolio Health</h2>
+        <p class="hint">Delivery status and budget utilization across active educational programs.</p>
+        <table class="data" id="portfolio-table"></table>
+      </div>
+      <div class="panel">
+        <h2>Delivery Confidence</h2>
+        <p class="hint">Share of milestones tracking on-time this period.</p>
+        <div class="donut">
+          <div id="donut"></div>
+          <div style="font-size:.86em;color:var(--muted)">
+            <div style="margin:6px 0"><span style="color:var(--green)">●</span> On track</div>
+            <div style="margin:6px 0"><span style="color:var(--amber)">●</span> At risk</div>
+            <div style="margin:6px 0"><span style="color:var(--rose)">●</span> Off track</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="view" id="view-road">
+    <div class="panel">
+      <h2>Curriculum &amp; Delivery Roadmap</h2>
+      <p class="hint">Phased plan from design through delivery and evaluation. Bars show planned duration;
+        the darker fill is % complete; diamonds are milestones. Hover a bar for detail.</p>
+      <div class="gantt" id="gantt"></div>
+    </div>
+  </section>
+
+  <!-- BOARD -->
+  <section class="view" id="view-board">
+    <div class="panel">
+      <h2>Delivery Board</h2>
+      <p class="hint">Agile task board across all programs — drag a card between columns to update its status.
+        Work-in-progress is tracked per column.</p>
+      <div class="board" id="board"></div>
+    </div>
+  </section>
+
+  <!-- COHORTS -->
+  <section class="view" id="view-cohort">
+    <div class="row2">
+      <div class="panel">
+        <h2>Cohort Progress</h2>
+        <p class="hint">Module completion by active cohort.</p>
+        <div id="cohorts"></div>
+      </div>
+      <div class="panel">
+        <h2>Outcome Metrics</h2>
+        <p class="hint">Learning-outcome and engagement indicators, current vs. target.</p>
+        <div id="outcomes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOVERNANCE -->
+  <section class="view" id="view-gov">
+    <div class="panel">
+      <h2>RACI — Program Delivery</h2>
+      <p class="hint">Who is Responsible, Accountable, Consulted, and Informed across delivery workstreams.</p>
+      <div style="overflow-x:auto"><table class="data" id="raci"></table></div>
+    </div>
+    <div class="panel">
+      <h2>Risk Register</h2>
+      <p class="hint">Live risks with severity (probability × impact) and mitigation owners.</p>
+      <div style="overflow-x:auto"><table class="data" id="risks"></table></div>
+    </div>
+  </section>
+
+  <footer class="site">
+    <p><strong style="color:#c3b4ff">EdTech Program Command Center</strong> — a self-contained program-management
+      console (no backend, no frameworks). Sample data is illustrative.</p>
+    <p style="margin-top:8px">Built by <a href="https://github.com/Freddricklogan">Freddrick Logan</a> ·
+      <a href="https://github.com/Freddricklogan/edtech-program-command-center">Source</a> ·
+      <a href="https://www.linkedin.com/in/freddricklogan/">LinkedIn</a></p>
+  </footer>
+</div>
+<div class="flash" id="flash"></div>
+
+<script>
+/* ================= EdTech Program Command Center =================
+   Self-contained PMO dashboard: KPIs, Gantt roadmap, drag-drop agile
+   board, cohort analytics, RACI, and a risk register. No dependencies.
+==================================================================== */
+const flash=m=>{const f=document.getElementById('flash');f.textContent=m;f.classList.add('show');
+  clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove('show'),1800);};
+
+/* ---- Data ---- */
+const programs=[
+  {name:"Data Analytics Bootcamp", lead:"F. Logan", status:"On track", budget:78, cohorts:2},
+  {name:"K-12 STEM Curriculum", lead:"A. Rivera", status:"At risk", budget:64, cohorts:5},
+  {name:"Faculty AI Upskilling", lead:"M. Chen", status:"On track", budget:41, cohorts:3},
+  {name:"District LMS Migration", lead:"S. Patel", status:"Off track", budget:92, cohorts:1},
+];
+const kpis=[
+  {l:"On-Time Delivery", n:"87%", d:"milestones this quarter", t:"+6 pts", up:true, v:87, c:"var(--green)"},
+  {l:"Cohort Completion", n:"91%", d:"across active cohorts", t:"+3 pts", up:true, v:91, c:"var(--teal)"},
+  {l:"Budget Utilization", n:"69%", d:"of allocated funds", t:"on plan", up:true, v:69, c:"var(--violet)"},
+  {l:"Learner Satisfaction", n:"4.6/5", d:"end-of-module survey", t:"+0.2", up:true, v:92, c:"var(--amber)"},
+  {l:"Open Risks", n:"5", d:"2 high severity", t:"-1", up:true, v:40, c:"var(--rose)"},
+];
+const phases=[
+  {t:"Needs Analysis & Design", s:0, e:2, p:100, prog:"Analytics"},
+  {t:"Curriculum Development", s:1, e:4, p:85, prog:"Analytics"},
+  {t:"Platform / LMS Setup", s:2, e:5, p:70, prog:"LMS"},
+  {t:"Pilot Cohort", s:4, e:6, p:45, prog:"STEM", milestone:6},
+  {t:"Faculty Enablement", s:3, e:6, p:60, prog:"Faculty"},
+  {t:"Full Delivery", s:6, e:10, p:15, prog:"Analytics"},
+  {t:"Assessment & Evaluation", s:8, e:11, p:0, prog:"All", milestone:11},
+];
+const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const progColor={Analytics:"#7c5cff",STEM:"#25d6c4",Faculty:"#ffb454",LMS:"#ff6b8b",All:"#5b8bff"};
+let tasks=[
+  {id:1,t:"Finalize Module 4 assessments",prog:"Analytics Bootcamp",pri:"high",who:"FL",col:"progress"},
+  {id:2,t:"Record lab walkthrough videos",prog:"Analytics Bootcamp",pri:"med",who:"MC",col:"backlog"},
+  {id:3,t:"STEM kit vendor selection",prog:"K-12 STEM",pri:"high",who:"AR",col:"review"},
+  {id:4,t:"Migrate gradebook data",prog:"LMS Migration",pri:"high",who:"SP",col:"progress"},
+  {id:5,t:"Accessibility audit (WCAG 2.1)",prog:"LMS Migration",pri:"med",who:"SP",col:"backlog"},
+  {id:6,t:"Faculty AI workshop deck",prog:"Faculty Upskilling",pri:"low",who:"MC",col:"done"},
+  {id:7,t:"Pilot cohort onboarding",prog:"K-12 STEM",pri:"med",who:"AR",col:"progress"},
+  {id:8,t:"Define outcome rubrics",prog:"Analytics Bootcamp",pri:"low",who:"FL",col:"done"},
+  {id:9,t:"Stakeholder steering readout",prog:"All Programs",pri:"med",who:"FL",col:"review"},
+];
+const cols=[["backlog","Backlog"],["progress","In Progress"],["review","Review"],["done","Done"]];
+const cohorts=[
+  {n:"Analytics · Cohort A",p:82},{n:"Analytics · Cohort B",p:54},
+  {n:"STEM · Spring Pilot",p:68},{n:"Faculty · Group 1",p:95},{n:"Faculty · Group 2",p:39},
+];
+const outcomes=[
+  {n:"Competency mastery",v:88,tg:85},{n:"Assignment completion",v:91,tg:90},
+  {n:"Weekly active learners",v:76,tg:80},{n:"Peer collaboration index",v:71,tg:70},
+];
+const raci=[
+  {ws:"Curriculum design", F:"A", A:"R", M:"C", S:"I"},
+  {ws:"Platform / LMS", F:"C", A:"I", M:"C", S:"R"},
+  {ws:"Faculty enablement", F:"C", A:"I", M:"R", S:"I"},
+  {ws:"Assessment & QA", F:"R", A:"C", M:"C", S:"I"},
+  {ws:"Stakeholder comms", F:"A", A:"C", M:"I", S:"C"},
+];
+const risks=[
+  {r:"LMS data migration slips past cutover window",sev:"hi",own:"S. Patel",mit:"Parallel-run + phased cutover"},
+  {r:"STEM kit procurement lead time",sev:"hi",own:"A. Rivera",mit:"Dual-source vendors; early PO"},
+  {r:"Faculty availability during term",sev:"md",own:"M. Chen",mit:"Async micro-modules + stipends"},
+  {r:"Accessibility non-compliance",sev:"md",own:"S. Patel",mit:"WCAG audit gate before launch"},
+  {r:"Cohort B engagement dip",sev:"lo",own:"F. Logan",mit:"Early-alert nudges + mentoring"},
+];
+
+/* ---- Render ---- */
+const el=id=>document.getElementById(id);
+function kpiRow(){
+  el('kpi-row').innerHTML=kpis.map(k=>`<div class="kpi">
+    <div class="l">${k.l}</div>
+    <div class="n" style="color:${k.c}">${k.n}</div>
+    <div class="d">${k.d} · <span class="trend ${k.up?'up':'down'}">${k.up?'▲':'▼'} ${k.t}</span></div>
+    <div class="bar"><span style="width:${k.v}%;background:${k.c}"></span></div></div>`).join('');
+}
+function portfolio(){
+  const sColor=s=>s==='On track'?'var(--green)':s==='At risk'?'var(--amber)':'var(--rose)';
+  el('portfolio-table').innerHTML=`<tr><th>Program</th><th>Lead</th><th>Status</th><th>Budget used</th></tr>`+
+    programs.map(p=>`<tr><td><b>${p.name}</b></td><td>${p.lead}</td>
+      <td><span style="color:${sColor(p.status)}">●</span> ${p.status}</td>
+      <td><div class="bar" style="width:120px"><span style="width:${p.budget}%;background:${p.budget>85?'var(--rose)':'var(--violet)'}"></span></div>
+        <span style="font-size:.76em;color:var(--muted)">${p.budget}%</span></td></tr>`).join('');
+  el('prog-count').textContent=programs.length;
+}
+function donut(){
+  const on=68,risk=21,off=11, C=2*Math.PI*52;
+  const seg=(off0,len,col)=>`<circle r="52" cx="70" cy="70" fill="none" stroke="${col}" stroke-width="16"
+     stroke-dasharray="${C*len/100} ${C}" stroke-dashoffset="${-C*off0/100}" transform="rotate(-90 70 70)"/>`;
+  el('donut').innerHTML=`<svg width="140" height="140" viewBox="0 0 140 140">
+    ${seg(0,on,'var(--green)')}${seg(on,risk,'var(--amber)')}${seg(on+risk,off,'var(--rose)')}
+    <text x="70" y="66" text-anchor="middle" fill="#eaecff" font-size="24" font-weight="800">${on}%</text>
+    <text x="70" y="86" text-anchor="middle" fill="#9aa3c7" font-size="10">on track</text></svg>`;
+}
+function gantt(){
+  const N=months.length;
+  let html=`<table><tr><th class="task"></th>${months.map(m=>`<th>${m}</th>`).join('')}</tr>`;
+  phases.forEach(ph=>{
+    const col=progColor[ph.prog]||'#7c5cff';
+    const left=ph.s/N*100, width=(ph.e-ph.s)/N*100;
+    html+=`<tr><td class="task">${ph.t}<div style="font-size:.72em;color:var(--muted)">${ph.prog}</div></td>
+      <td colspan="${N}"><div class="track">
+        <div class="gbar" style="left:${left}%;width:${width}%;background:${col}" title="${ph.t} — ${ph.p}% complete">
+          <div class="prog" style="width:${100-ph.p}%;right:0;left:auto"></div>${ph.p}%</div>
+        ${ph.milestone!=null?`<div class="milestone" style="left:calc(${ph.milestone/N*100}% - 11px);background:${col}"></div>`:''}
+      </div></td></tr>`;
+  });
+  el('gantt').innerHTML=html+'</table>';
+}
+function board(){
+  el('board').innerHTML=cols.map(([id,label])=>{
+    const items=tasks.filter(t=>t.col===id);
+    return `<div class="col" data-col="${id}" ondragover="allow(event)" ondrop="drop(event)" ondragleave="leave(event)">
+      <h3>${label}<span>${items.length}</span></h3>
+      ${items.map(t=>`<div class="card" draggable="true" data-id="${t.id}" ondragstart="dragStart(event)" ondragend="dragEnd(event)">
+        <div class="t">${t.t}</div>
+        <div class="m"><span class="prog-name">${t.prog}</span>
+          <span style="display:flex;gap:6px;align-items:center">
+            <span class="pill p-${t.pri}">${t.pri}</span><span class="avatar">${t.who}</span></span></div>
+      </div>`).join('')}
+    </div>`;}).join('');
+}
+window.allow=e=>{e.preventDefault();e.currentTarget.classList.add('drag');};
+window.leave=e=>e.currentTarget.classList.remove('drag');
+let dragId=null;
+window.dragStart=e=>{dragId=+e.target.dataset.id;e.target.classList.add('dragging');};
+window.dragEnd=e=>e.target.classList.remove('dragging');
+window.drop=e=>{e.preventDefault();e.currentTarget.classList.remove('drag');
+  const col=e.currentTarget.dataset.col;const t=tasks.find(x=>x.id===dragId);
+  if(t&&t.col!==col){t.col=col;board();flash('Moved “'+t.t+'” → '+col);}};
+function cohortView(){
+  el('cohorts').innerHTML=cohorts.map(c=>{
+    const col=c.p>=80?'var(--green)':c.p>=55?'var(--teal)':'var(--amber)';
+    return `<div class="cohort"><div class="top"><span>${c.n}</span><b style="color:${col}">${c.p}%</b></div>
+      <div class="bar"><span style="width:${c.p}%;background:${col}"></span></div></div>`;}).join('');
+  el('outcomes').innerHTML=outcomes.map(o=>{
+    const hit=o.v>=o.tg;
+    return `<div class="cohort"><div class="top"><span>${o.n}</span>
+      <span><b style="color:${hit?'var(--green)':'var(--amber)'}">${o.v}%</b>
+      <span style="color:var(--muted);font-size:.82em"> / target ${o.tg}%</span></span></div>
+      <div class="bar"><span style="width:${o.v}%;background:${hit?'var(--green)':'var(--amber)'}"></span></div></div>`;}).join('');
+}
+function govView(){
+  el('raci').innerHTML=`<tr><th>Workstream</th><th>F. Logan</th><th>A. Rivera</th><th>M. Chen</th><th>S. Patel</th></tr>`+
+    raci.map(r=>`<tr><td>${r.ws}</td>
+      <td><span class="raci ${r.F}">${r.F}</span></td><td><span class="raci ${r.A}">${r.A}</span></td>
+      <td><span class="raci ${r.M}">${r.M}</span></td><td><span class="raci ${r.S}">${r.S}</span></td></tr>`).join('');
+  const sevLabel={hi:'High',md:'Medium',lo:'Low'};
+  el('risks').innerHTML=`<tr><th>Risk</th><th>Severity</th><th>Owner</th><th>Mitigation</th></tr>`+
+    risks.map(r=>`<tr><td>${r.r}</td><td><span class="sev ${r.sev}">${sevLabel[r.sev]}</span></td>
+      <td>${r.own}</td><td style="color:var(--muted)">${r.mit}</td></tr>`).join('');
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+t.dataset.view));
+});
+kpiRow();portfolio();donut();gantt();board();cohortView();govView();
+</script>
+</body>
+</html>
