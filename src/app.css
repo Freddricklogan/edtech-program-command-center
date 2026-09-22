@@ -11,7 +11,7 @@
   transition: background var(--shell-speed) ease, border-color var(--shell-speed) ease;
 }
 .epc-tab:hover { border-color: var(--accent); }
-.epc-tab[aria-selected='true'] { background: var(--accent); border-color: var(--accent); color: #07101f; }
+.epc-tab[aria-selected='true'] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 
 /* Panels */
 .epc-panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; }
@@ -100,7 +100,7 @@ td .epc-bar { display: inline-block; width: 110px; vertical-align: middle; margi
 .epc-pill[data-priority='high'] { background: color-mix(in srgb, var(--danger) 18%, transparent); color: var(--danger); }
 .epc-pill[data-priority='med'] { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
 .epc-pill[data-priority='low'] { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
-.epc-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #07101f; font-size: .62rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+.epc-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: .62rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
 .epc-card__move { margin-top: 8px; width: 100%; background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; font: inherit; font-size: .74rem; }
 .epc-board-tools { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; font-size: .8rem; color: var(--muted); }
 
@@ -137,7 +137,7 @@ tr.is-invalid th { color: var(--danger); }
   border-radius: var(--radius-sm); font: inherit; font-size: .8rem; cursor: pointer;
 }
 .epc-btn:hover { background: var(--border); }
-.epc-btn--primary { background: var(--accent); border-color: var(--accent); color: #07101f; font-weight: 600; }
+.epc-btn--primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
 .epc-statusbar { margin: 0 0 14px; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--panel); border: 1px solid var(--border); font-size: .8rem; color: var(--muted); border-left: 3px solid var(--tone, var(--border)); min-height: 2.2em; }
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
