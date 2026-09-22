@@ -155,6 +155,7 @@ const SAMPLE_RISK_CSV = [
 ].join('\n');
 
 const shell = mountExecShell({
+  theme: 'ember',
   title: 'EdTech Program Command Center',
   tagline:
     'A programme-management console for educational delivery — roadmap, delivery board with WIP limits, cohort analytics, RACI validation and a scored risk register. Every number on screen is computed from the data beneath it. Sample data; illustrative.',
