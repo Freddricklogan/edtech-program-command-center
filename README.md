@@ -170,7 +170,7 @@ npm run serve      # http://localhost:3000
 **Verification — the numbers this repository actually produced:**
 
 ```bash
-npm test         # Test Files 7 passed (7) · Tests 60 passed (60)
+npm test         # Test Files 7 passed (7) · Tests 68 passed (60)
 npm run coverage # All files 100% statements · 94.33% branches
 npm run lint     # eslint . — clean
 npm run validate # html-validate index.html — clean

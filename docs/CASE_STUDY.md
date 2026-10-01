@@ -32,7 +32,7 @@ Worth knowing: rebuilding this exposed that the earlier version computed nothing
 
 ## 6. Evidence
 
-Measured in continuous integration and a headless-browser smoke test: 60 unit tests passing across seven files, 100% statement coverage over the pure modules, lint and HTML validation clean, CodeQL and dependency scanning enabled. In the browser: zero console errors; the tour's third step is refused by the In Progress limit of three with the reason on screen; the fourth lists four RACI findings; the fifth imports a three-row CSV, loads two rows and names the skipped one. No horizontal scroll at 400 pixels. Security posture: Content Security Policy with `default-src 'none'`, no script from any CDN, no inline handlers or styles.
+Measured in continuous integration and a headless-browser smoke test: 68 unit tests passing across seven files, 100% statement coverage over the pure modules, lint and HTML validation clean, CodeQL and dependency scanning enabled. In the browser: zero console errors; the tour's third step is refused by the In Progress limit of three with the reason on screen; the fourth lists four RACI findings; the fifth imports a three-row CSV, loads two rows and names the skipped one. No horizontal scroll at 400 pixels. Security posture: Content Security Policy with `default-src 'none'`, no script from any CDN, no inline handlers or styles.
 
 ## 7. What it would take to run this in production
 
